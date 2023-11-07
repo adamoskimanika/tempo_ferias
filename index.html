@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Contagem_regressiva</title>
+    
+	
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<p>&nbsp;</p>
+<h1>
+  <h1> Contagem regressiva </h1> 
+    <p></p>
+</h1>
+
+<div class="tabela" id="tabela">
+    <table width="900" border="1">
+        <tbody>
+            <tr>
+                <th scope="col">Descrição</th>
+                <th scope="col">Dias Restantes</th>
+            </tr>
+            <tr>
+                <th scope="row">Todos os dias até 21/12</th>
+                <td id="todosDias" class="todos-dias"> </td>
+            </tr>
+            <tr>
+                <th scope="row">Sem sábados, domingos e feriado (15/11)</th>
+                <td id="diasSemFeriados" class="sem"></td>
+            </tr>
+            <tr>
+                <th scope="row">Sem sábados, domingos e quartas</th>
+                <td id="diasSemQuartas" class="eu"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+    // Defina a data de referência (21/12)
+    var referenceDate = moment('2023-12-21', 'YYYY-MM-DD');
+
+    var todosDias = referenceDate.diff(moment(), 'days') + 1; // Adiciona 1 para incluir o próprio dia de referência
+    var diasSemFeriados = getWorkingDaysWithoutHolidays(moment(), referenceDate) + 1; // Adiciona 1 para incluir o próprio dia de referência
+    var diasSemQuartas = getWorkingDaysWithoutWeekdays(moment(), referenceDate, [0, 6, 3]) + 1; // Adiciona 1 para incluir o próprio dia de referência
+
+    document.getElementById("todosDias").innerText = todosDias;
+    document.getElementById("diasSemFeriados").innerText = diasSemFeriados;
+    document.getElementById("diasSemQuartas").innerText = diasSemQuartas;
+
+    function getWorkingDaysWithoutHolidays(startDate, endDate) {
+        var days = 0;
+        var current = startDate.clone();
+
+        while (current.isBefore(endDate)) {
+            if (!(current.day() === 0 || current.day() === 6 || (current.month() === 10 && current.date() === 15))) {
+                days++;
+            }
+
+            current.add(1, 'days');
+        }
+
+        return days;
+    }
+
+    function getWorkingDaysWithoutWeekdays(startDate, endDate, excludedWeekdays) {
+        var days = 0;
+        var current = startDate.clone();
+
+        while (current.isBefore(endDate)) {
+            if (!(current.day() === 0 || current.day() === 6 || excludedWeekdays.includes(current.day()))) {
+                days++;
+            }
+
+            current.add(1, 'days');
+        }
+
+        return days;
+    }
+</script>
+</body>
+</html>
